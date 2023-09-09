@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="vadimaid" id="init_scripts">
+        <sql>
+            create table if not exists app_user (
+                id bigserial primary key,
+                created_at timestamp without time zone not null default now(),
+                user_login varchar(255) not null unique,
+                user_password varchar(255) not null,
+                user_first_name varchar(255) not null,
+                user_last_name varchar(255),
+                user_type varchar(25) not null,
+                is_active boolean not null default true
+            );
+
+            create table if not exists app_role (
+                id bigserial primary key,
+                role_name varchar(255) not null unique
+            );
+
+            create table if not exists user_role (
+                user_id bigint not null references app_user (id) on update cascade on delete no action,
+                role_id bigint not null references app_role (id) on update cascade on delete no action,
+                constraint unique_pair unique (user_id, role_id)
+            );
+
+            insert into app_role (role_name) values ('ADMIN');
+            insert into app_user (created_at, user_login, user_password, user_first_name, user_last_name, user_type, is_active)
+            values (
+                       now(),
+                       'admin',
+                       '$2a$08$IdyPNJsm/wlAH3UX85eCMOpw2BGpjxRW2kjiOAk0CeQIfVS7hkIYa',
+                       'Administrator',
+                       'System',
+                       'SYSTEM',
+                       true
+                   );
+
+            insert into user_role (user_id, role_id)
+            values (
+                       (select id from app_user where user_login = 'admin'),
+                       (select id from app_role where role_name = 'ADMIN')
+               );
+        </sql>
+        <rollback>
+            drop table user_role;
+            drop table app_role;
+            drop table app_user;
+        </rollback>
+    </changeSet>
+</databaseChangeLog>
