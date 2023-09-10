@@ -10,6 +10,7 @@ public class AppUserTestEntityProvider {
     public static final Long APP_USER_SECOND_TEST_ID = 2L;
     public static final String APP_USER_TEST_LOGIN = "test_login";
     public static final String APP_USER_TEST_RAW_PASSWORD = "test_password";
+    public static final String TEST_WRONG_PASSWORD = "WRONG_PASSWORD";
     public static final String APP_USER_TEST_FIRSTNAME = "test_firstname";
     public static final String APP_USER_TEST_LASTNAME = "test_lastname";
     public static final UserType APP_USER_TEST_USER_TYPE = UserType.CLIENT;

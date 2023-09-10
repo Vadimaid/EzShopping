@@ -32,7 +32,7 @@ public class AppUserDetailsServiceImpl implements AppUserDetailsService {
 
         Optional<AppUser> appUserOptional = this.appUserRepository.getAppUserByLogin(username);
         if(appUserOptional.isEmpty()) {
-            throw new UsernameNotFoundException("Пользователя с указанным логином не найдено в системе!");
+            throw new UsernameNotFoundException("Пользователя с введенным логином не найдено в системе!");
         }
         return appUserOptional.get();
     }

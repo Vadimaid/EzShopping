@@ -21,4 +21,4 @@ spring:
 jwt:
   token:
     secret: "${JWT_SECRET}"
-    expired: "${JWT_EXPIRATION_TIME_MS}}"
+    expired: "${JWT_EXPIRATION_TIME_MS}"
