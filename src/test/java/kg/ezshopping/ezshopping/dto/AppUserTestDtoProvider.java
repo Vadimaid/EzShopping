@@ -11,4 +11,10 @@ public class AppUserTestDtoProvider {
                 .setLastName(AppUserTestEntityProvider.APP_USER_TEST_LASTNAME)
                 .setUserType(AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE);
     }
+
+    public static UserCredentialsRequestDto getUserCredentialsTestRequestDto() {
+        return new UserCredentialsRequestDto()
+                .setLogin(AppUserTestEntityProvider.APP_USER_TEST_LOGIN)
+                .setPassword(AppUserTestEntityProvider.APP_USER_TEST_RAW_PASSWORD);
+    }
 }
