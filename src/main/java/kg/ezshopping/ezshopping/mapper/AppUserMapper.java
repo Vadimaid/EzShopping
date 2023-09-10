@@ -2,7 +2,9 @@ package kg.ezshopping.ezshopping.mapper;
 
 import kg.ezshopping.ezshopping.dto.AppUserRequestDto;
 import kg.ezshopping.ezshopping.dto.AppUserResponseDto;
+import kg.ezshopping.ezshopping.dto.UserTypeResponseDto;
 import kg.ezshopping.ezshopping.entity.AppUser;
+import kg.ezshopping.ezshopping.types.UserType;
 
 import java.util.List;
 import java.util.stream.Collectors;
