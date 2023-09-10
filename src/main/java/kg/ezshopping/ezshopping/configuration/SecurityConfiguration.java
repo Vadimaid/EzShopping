@@ -51,6 +51,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .antMatchers(
                         "/**/auth/**",
+                        "/**/user-types/non-system",
                         "/v3/api-docs/**",
                         "/swagger-resources/**",
                         "/swagger-ui/**"
