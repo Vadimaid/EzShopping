@@ -47,10 +47,10 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         }
 
         String userLogin = userCredentialsRequestDto.getLogin();
-        this.appUserValidator.validateLogin(userLogin);
+        this.appUserValidator.checkIfLoginIsNullOrEmpty(userLogin);
 
         String userPassword = userCredentialsRequestDto.getPassword();
-        this.appUserValidator.validatePassword(userPassword);
+        this.appUserValidator.checkIfPasswordIsNullOrEmpty(userPassword);
 
         UserDetails authenticatedUser = this.userDetailsService.loadUserByUsername(userLogin);
 

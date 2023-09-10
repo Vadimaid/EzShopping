@@ -6,8 +6,8 @@ import kg.ezshopping.ezshopping.dto.AppUserRequestDto;
 import kg.ezshopping.ezshopping.dto.AppUserResponseDto;
 import kg.ezshopping.ezshopping.dto.JwtResponseDto;
 import kg.ezshopping.ezshopping.dto.UserCredentialsRequestDto;
-import kg.ezshopping.ezshopping.exception.InvalidUserCredentialsException;
-import kg.ezshopping.ezshopping.exception.WrongPasswordException;
+import kg.ezshopping.ezshopping.exception.*;
+import kg.ezshopping.ezshopping.service.AppUserService;
 import kg.ezshopping.ezshopping.service.AuthenticationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,23 +24,35 @@ import org.springframework.web.bind.annotation.RestController;
 )
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
+    private final AppUserService appUserService;
 
     @Autowired
     public AuthenticationController(
-            AuthenticationService authenticationService
+            AuthenticationService authenticationService,
+            AppUserService appUserService
     ) {
         this.authenticationService = authenticationService;
+        this.appUserService = appUserService;
     }
 
     @Operation(
             summary = "Регистрация нового пользователя.",
-            description = ""
+            description = "Регистрирует пользователя в системе. " +
+                    "В теле запроса принимает данные пользователя в виде AppUserRequestDto. " +
+                    "Возвращает 200-OK и информацию о сохраненном пользователе в теле ответа в виде AppUserResponseDto, " +
+                    "если пользователь сохранен успешно. " +
+                    "Иначе 400-BAD_REQUEST и в теле ответа сообщение об ошибке"
     )
     @PostMapping(value = "/register")
     public ResponseEntity<AppUserResponseDto> registerNewAppUser(
             @RequestBody AppUserRequestDto appUserRequestDto
-    ) {
-        return null;
+    )
+            throws InvalidUserInfoException,
+            InvalidUserTypeException,
+            LoginAlreadyExistsException,
+            InvalidUserCredentialsException
+    {
+        return ResponseEntity.ok(this.appUserService.registerNewAppUser(appUserRequestDto));
     }
 
     @Operation(

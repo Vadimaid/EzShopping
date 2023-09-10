@@ -5,6 +5,7 @@ import kg.ezshopping.ezshopping.types.UserType;
 import javax.persistence.Column;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
+import java.util.Objects;
 
 public class AppUserRequestDto {
     private String login;
@@ -59,5 +60,22 @@ public class AppUserRequestDto {
     public AppUserRequestDto setUserType(UserType userType) {
         this.userType = userType;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppUserRequestDto that = (AppUserRequestDto) o;
+        return Objects.equals(login, that.login) &&
+                Objects.equals(password, that.password) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(lastName, that.lastName) &&
+                userType == that.userType;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(login, password, firstName, lastName, userType);
     }
 }

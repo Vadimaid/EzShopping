@@ -3,6 +3,7 @@ package kg.ezshopping.ezshopping.service.impl;
 import kg.ezshopping.ezshopping.entity.AppUser;
 import kg.ezshopping.ezshopping.repository.AppUserRepository;
 import kg.ezshopping.ezshopping.service.AppUserDetailsService;
+import kg.ezshopping.ezshopping.validator.AppUserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -27,7 +28,7 @@ public class AppUserDetailsServiceImpl implements AppUserDetailsService {
             throws UsernameNotFoundException
     {
         if(Objects.isNull(username) || username.isEmpty()) {
-            throw new IllegalArgumentException("Имя пользователя не может быть null или пустым!");
+            throw new IllegalArgumentException("Логин пользователя не может быть null или пустым!");
         }
 
         Optional<AppUser> appUserOptional = this.appUserRepository.getAppUserByLogin(username);

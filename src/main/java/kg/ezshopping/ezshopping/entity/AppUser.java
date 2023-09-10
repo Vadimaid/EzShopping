@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Objects;
 
 @Entity
 @Table(name = "app_user")
@@ -157,5 +158,19 @@ public class AppUser extends BaseEntity implements UserDetails {
         return this;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AppUser appUser = (AppUser) o;
+        return Objects.equals(firstName, appUser.firstName) &&
+                Objects.equals(lastName, appUser.lastName) &&
+                userType == appUser.userType &&
+                Objects.equals(userRolesList, appUser.userRolesList);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(firstName, lastName, userType, userRolesList);
+    }
 }
