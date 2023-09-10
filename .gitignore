@@ -19,3 +19,8 @@ target/
 *.iws
 *.iml
 *.ipr
+
+### MacOS additional ###
+**/.DS_Store
+
+local.params
