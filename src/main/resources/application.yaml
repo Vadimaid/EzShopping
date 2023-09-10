@@ -17,3 +17,8 @@ spring:
   liquibase:
     enabled: true
     change-log: db.changelog-master.yaml
+
+jwt:
+  token:
+    secret: "${JWT_SECRET}"
+    expired: "${JWT_EXPIRATION_TIME_MS}}"
