@@ -57,5 +57,4 @@ public class AppUserMapperTest {
             Assertions.assertEquals(appUserList.get(i).getUserType(), resultList.get(i).getUserType());
         }
     }
-
 }
