@@ -22,5 +22,3 @@ target/
 
 ### MacOS additional ###
 **/.DS_Store
-
-local.params

@@ -37,7 +37,6 @@ import java.util.Objects;
         initializers = { YamlTestContextInitializer.class },
         classes = { SecurityConfigurationTest.class }
 )
-@TestPropertySource(value = "classpath:test.yaml")
 public class AuthenticationControllerTest {
     @MockBean
     private AppUserRepository appUserRepository;

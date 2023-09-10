@@ -3,6 +3,7 @@ package kg.ezshopping.ezshopping.service;
 import kg.ezshopping.ezshopping.dto.UserTypeResponseDto;
 import kg.ezshopping.ezshopping.service.impl.UserTypeServiceImpl;
 import kg.ezshopping.ezshopping.types.UserType;
+import kg.ezshopping.ezshopping.utils.UserTypeAssertionsUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,15 +35,6 @@ public class UserTypeServiceTest {
     @Test
     public void testGetAllNotSystemUserTypes_OK() {
         List<UserTypeResponseDto> resultList = this.userTypeService.getAllNonSystemUserTypes();
-        assertFalse(this.checkIfResultListContainsSystemType(resultList));
-    }
-
-    private boolean checkIfResultListContainsSystemType(List<UserTypeResponseDto> resultList) {
-        for (UserTypeResponseDto result : resultList) {
-            if(result.getUserType().equals(UserTypeService.SYSTEM_TYPE)) {
-                return true;
-            }
-        }
-        return false;
+        Assertions.assertTrue(UserTypeAssertionsUtils.assertThatNotContainsSystemType(resultList));
     }
 }
