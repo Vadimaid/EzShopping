@@ -4,6 +4,7 @@ import kg.ezshopping.ezshopping.entity.AppUser;
 import kg.ezshopping.ezshopping.entity.AppUserTestEntityProvider;
 import kg.ezshopping.ezshopping.repository.AppUserRepository;
 import kg.ezshopping.ezshopping.service.impl.AppUserDetailsServiceImpl;
+import kg.ezshopping.ezshopping.validator.AppUserValidator;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -68,13 +69,13 @@ public class AppUserDetailsServiceTest {
     }
 
     @Test
-    public void testLoadUserByUsername_UsernameIsNull() {
+    public void testLoadUserByUsername_UsernameIsEmpty() {
         Exception exception = Assertions.assertThrows(
                 IllegalArgumentException.class,
                 () -> this.userDetailsService.loadUserByUsername("")
         );
         Assertions.assertEquals(
-                "Имя пользователя не может быть null или пустым!",
+                "Логин пользователя не может быть null или пустым!",
                 exception.getMessage()
         );
     }
