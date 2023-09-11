@@ -63,7 +63,7 @@ public class AppUserDetailsServiceTest {
                 () -> this.userDetailsService.loadUserByUsername(AppUserTestEntityProvider.APP_USER_TEST_LOGIN)
         );
         Assertions.assertEquals(
-                "Пользователя с указанным логином не найдено в системе!",
+                "Пользователя с введенным логином не найдено в системе!",
                 exception.getMessage()
         );
     }
