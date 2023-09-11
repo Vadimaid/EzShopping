@@ -32,7 +32,10 @@ import org.springframework.test.context.TestPropertySource;
 import java.net.URI;
 import java.util.Objects;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+        properties = "spring.main.allow-bean-definition-overriding=true"
+)
 @ContextConfiguration(
         initializers = { YamlTestContextInitializer.class },
         classes = { SecurityConfigurationTest.class }
