@@ -1,7 +1,7 @@
 package kg.ezshopping.ezshopping.controller.v1;
 
 import kg.ezshopping.ezshopping.configuration.SecurityConfigurationTest;
-import kg.ezshopping.ezshopping.date.TestRegistrationDateProvider;
+import kg.ezshopping.ezshopping.date.TestRegistrationDateFiltersProvider;
 import kg.ezshopping.ezshopping.dto.*;
 import kg.ezshopping.ezshopping.entity.AppUser;
 import kg.ezshopping.ezshopping.entity.AppUserTestEntityProvider;
@@ -21,13 +21,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.TestPropertySource;
 
 import java.net.URI;
 import java.util.Objects;
@@ -228,7 +226,7 @@ public class AuthenticationControllerTest {
                     .thenAnswer(
                             invocationOnMock -> {
                                 AppUser persistedUser = (AppUser) invocationOnMock.getArguments()[0];
-                                persistedUser.setCreatedAt(TestRegistrationDateProvider.TEST_REGISTRATION_DATE);
+                                persistedUser.setCreatedAt(TestRegistrationDateFiltersProvider.TEST_REGISTRATION_DATE);
                                 persistedUser.setActive(Boolean.TRUE);
                                 persistedUser.setId(appUser.getId());
                                 return persistedUser;
@@ -236,9 +234,10 @@ public class AuthenticationControllerTest {
                     );
 
             URI uri = new URI("http://localhost:" + this.port + "/v1/auth/register");
-            ResponseEntity<AppUserResponseDto> response = this.testRestTemplate.postForEntity(
+            ResponseEntity<AppUserResponseDto> response = this.testRestTemplate.exchange(
                     uri,
-                    requestDto,
+                    HttpMethod.POST,
+                    new HttpEntity<>(requestDto),
                     AppUserResponseDto.class
             );
 

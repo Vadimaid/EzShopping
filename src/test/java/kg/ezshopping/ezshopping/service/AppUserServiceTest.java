@@ -1,14 +1,12 @@
 package kg.ezshopping.ezshopping.service;
 
-import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
-import kg.ezshopping.ezshopping.date.TestRegistrationDateProvider;
+import kg.ezshopping.ezshopping.date.TestRegistrationDateFiltersProvider;
 import kg.ezshopping.ezshopping.dto.AppUserRequestDto;
 import kg.ezshopping.ezshopping.dto.AppUserResponseDto;
 import kg.ezshopping.ezshopping.dto.AppUserTestDtoProvider;
 import kg.ezshopping.ezshopping.entity.AppUser;
 import kg.ezshopping.ezshopping.entity.AppUserTestEntityProvider;
-import kg.ezshopping.ezshopping.entity.QAppUser;
 import kg.ezshopping.ezshopping.exception.AppUsersNotFoundException;
 import kg.ezshopping.ezshopping.exception.IncorrectDateFiltersException;
 import kg.ezshopping.ezshopping.exception.InvalidIdException;
@@ -67,7 +65,7 @@ public class AppUserServiceTest {
                     .thenAnswer(
                             invocationOnMock -> {
                                 AppUser persistedUser = (AppUser) invocationOnMock.getArguments()[0];
-                                persistedUser.setCreatedAt(TestRegistrationDateProvider.TEST_REGISTRATION_DATE);
+                                persistedUser.setCreatedAt(TestRegistrationDateFiltersProvider.TEST_REGISTRATION_DATE);
                                 persistedUser.setActive(Boolean.TRUE);
                                 persistedUser.setId(appUser.getId());
                                 return persistedUser;
@@ -119,8 +117,8 @@ public class AppUserServiceTest {
                     AppUserTestEntityProvider.APP_USER_TEST_ID,
                     AppUserTestEntityProvider.APP_USER_TEST_LOGIN,
                     AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE,
-                    TestRegistrationDateProvider.TEST_START_DATE_FILTER,
-                    TestRegistrationDateProvider.TEST_END_DATE_FILTER
+                    TestRegistrationDateFiltersProvider.TEST_START_DATE_FILTER,
+                    TestRegistrationDateFiltersProvider.TEST_END_DATE_FILTER
             );
 
             Assertions.assertEquals(1, resultList.size());
@@ -143,8 +141,8 @@ public class AppUserServiceTest {
                         0L,
                         AppUserTestEntityProvider.APP_USER_TEST_LOGIN,
                         AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE,
-                        TestRegistrationDateProvider.TEST_START_DATE_FILTER,
-                        TestRegistrationDateProvider.TEST_END_DATE_FILTER
+                        TestRegistrationDateFiltersProvider.TEST_START_DATE_FILTER,
+                        TestRegistrationDateFiltersProvider.TEST_END_DATE_FILTER
                 )
         );
         Assertions.assertEquals(
@@ -161,8 +159,8 @@ public class AppUserServiceTest {
                         AppUserTestEntityProvider.APP_USER_TEST_ID,
                         AppUserTestEntityProvider.APP_USER_TEST_LOGIN,
                         AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE,
-                        TestRegistrationDateProvider.TEST_END_DATE_FILTER,
-                        TestRegistrationDateProvider.TEST_START_DATE_FILTER
+                        TestRegistrationDateFiltersProvider.TEST_END_DATE_FILTER,
+                        TestRegistrationDateFiltersProvider.TEST_START_DATE_FILTER
                 )
         );
         Assertions.assertEquals(
@@ -183,8 +181,8 @@ public class AppUserServiceTest {
                         AppUserTestEntityProvider.APP_USER_TEST_ID,
                         AppUserTestEntityProvider.APP_USER_TEST_LOGIN,
                         AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE,
-                        TestRegistrationDateProvider.TEST_START_DATE_FILTER,
-                        TestRegistrationDateProvider.TEST_END_DATE_FILTER
+                        TestRegistrationDateFiltersProvider.TEST_START_DATE_FILTER,
+                        TestRegistrationDateFiltersProvider.TEST_END_DATE_FILTER
                 )
         );
         Assertions.assertEquals(
