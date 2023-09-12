@@ -29,4 +29,13 @@ public interface AppUserService {
             throws InvalidIdException,
             IncorrectDateFiltersException,
             AppUsersNotFoundException;
+
+    AppUserResponseDto updateUserInfo(
+            String oldPassword,
+            String newPassword,
+            String newFirstName,
+            String newLastName,
+            UserType userType,
+            Boolean isActive
+    ) throws WrongPasswordException;
 }

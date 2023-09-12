@@ -11,15 +11,13 @@ import kg.ezshopping.ezshopping.dto.AppUserResponseDto;
 import kg.ezshopping.ezshopping.exception.AppUsersNotFoundException;
 import kg.ezshopping.ezshopping.exception.IncorrectDateFiltersException;
 import kg.ezshopping.ezshopping.exception.InvalidIdException;
+import kg.ezshopping.ezshopping.exception.WrongPasswordException;
 import kg.ezshopping.ezshopping.service.AppUserService;
 import kg.ezshopping.ezshopping.types.UserType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -97,5 +95,28 @@ public class AppUserController {
             InvalidIdException
     {
         return ResponseEntity.ok(this.appUserService.getAllAppUsers(id, login, userType, startDate, endDate));
+    }
+
+    @PutMapping("/update")
+    public ResponseEntity<AppUserResponseDto> putUserInfo(
+            @RequestParam(required = true) String oldPassword,
+            @RequestParam(required = false) String newPassword,
+            @RequestParam(required = false) String newFirstName,
+            @RequestParam(required = false) String newLastName,
+            @RequestParam(required = false) UserType newUserType,
+            @RequestParam(required = false) Boolean newIsActive
+    ) throws WrongPasswordException {
+
+        return ResponseEntity.ok(
+                this.appUserService.
+                        updateUserInfo(
+                                oldPassword,
+                                newPassword,
+                                newFirstName,
+                                newLastName,
+                                newUserType,
+                                newIsActive
+                        )
+        );
     }
 }

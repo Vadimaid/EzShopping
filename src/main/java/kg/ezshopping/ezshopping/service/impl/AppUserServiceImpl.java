@@ -17,11 +17,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.management.relation.InvalidRelationIdException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -118,5 +116,47 @@ public class AppUserServiceImpl implements AppUserService {
             throw new AppUsersNotFoundException("По заданным параметрам не найдено ни одного пользователя!");
         }
         return appUserResponseDtoList;
+    }
+
+    @Override
+    public AppUserResponseDto updateUserInfo(
+            String oldPassword,
+            String newPassword,
+            String newFirstName,
+            String newLastName,
+            UserType userType,
+            Boolean isActive
+    ) throws WrongPasswordException
+    {
+        AppUser authorizedAppUser = (AppUser) SecurityContextHolder
+                .getContext()
+                .getAuthentication()
+                .getPrincipal();
+
+        if(Objects.nonNull(oldPassword) && !oldPassword.isEmpty()){
+            if(!passwordEncoder.matches(oldPassword,authorizedAppUser.getPassword())){
+                throw new WrongPasswordException("Введен неверный пароль!");
+            }
+        }
+
+        if(Objects.nonNull(newPassword) && !newPassword.isEmpty())  {
+            authorizedAppUser.setPassword(passwordEncoder.encode(newPassword));
+        }
+        if(Objects.nonNull(newFirstName) && !newFirstName.isEmpty())  {
+            authorizedAppUser.setFirstName(newFirstName);
+        }
+        if(Objects.nonNull(newLastName) && !newLastName.isEmpty())  {
+            authorizedAppUser.setLastName(newLastName);
+        }
+        if(Objects.nonNull(userType)){
+            authorizedAppUser.setUserType(userType);
+        }
+        if(Objects.nonNull(isActive)){
+            authorizedAppUser.setActive(isActive);
+        }
+
+        authorizedAppUser = this.appUserRepository.save(authorizedAppUser);
+
+        return AppUserMapper.mapEntityToAppUserResponseDto(authorizedAppUser);
     }
 }
