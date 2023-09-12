@@ -37,7 +37,7 @@ public class AppUser extends BaseEntity implements UserDetails {
     @Column(name = "is_active")
     private Boolean isActive;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_role",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
