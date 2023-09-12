@@ -1,5 +1,6 @@
 package kg.ezshopping.ezshopping.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import kg.ezshopping.ezshopping.types.UserType;
 
 import javax.persistence.Column;
@@ -7,11 +8,25 @@ import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
 import java.util.Objects;
 
+@Schema(description = "DTO для передачи данных о пользователе на сервер в теле запроса")
 public class AppUserRequestDto {
+    @Schema(
+            description = "Логин пользователя. Ограничения: Не может быть null или пустым. Должен быть уникальным",
+            example = "example_login",
+            required = true
+    )
     private String login;
+    @Schema(
+            description = "Незашифрованный пароль пользователя. Не может быть null или пустым",
+            example = "examplePassword",
+            required = true
+    )
     private String password;
+    @Schema(description = "Имя пользователя. Не может быть null или пустым", example = "Иван", required = true)
     private String firstName;
+    @Schema(description = "Фамилия пользователя. Не может быть null или пустым", example = "Петров", required = true)
     private String lastName;
+    @Schema(description = "Тип пользователя. Не может быть null", example = "SHOP", required = true)
     private UserType userType;
 
     public AppUserRequestDto() {

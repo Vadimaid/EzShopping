@@ -40,6 +40,10 @@ public class UserTypeController {
                             content = @Content(
                                     array = @ArraySchema(schema = @Schema(implementation = UserTypeResponseDto.class))
                             )
+                    ),
+                    @ApiResponse(
+                            responseCode = "401 UNAUTHORIZED",
+                            description = "Попытка доступа к ресурсу неавторизованным пользователем"
                     )
             }
     )

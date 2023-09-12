@@ -2,9 +2,8 @@ package kg.ezshopping.ezshopping.controller.v1;
 
 import com.querydsl.core.types.Predicate;
 import kg.ezshopping.ezshopping.configuration.SecurityConfigurationTest;
-import kg.ezshopping.ezshopping.date.TestRegistrationDateProvider;
+import kg.ezshopping.ezshopping.date.TestRegistrationDateFiltersProvider;
 import kg.ezshopping.ezshopping.dto.AppUserResponseDto;
-import kg.ezshopping.ezshopping.dto.JwtResponseDto;
 import kg.ezshopping.ezshopping.entity.AppUser;
 import kg.ezshopping.ezshopping.entity.AppUserTestEntityProvider;
 import kg.ezshopping.ezshopping.initializer.YamlTestContextInitializer;
@@ -20,7 +19,6 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.*;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -28,8 +26,6 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -100,8 +96,8 @@ public class AppUserControllerTest {
                     .queryParam("id", AppUserTestEntityProvider.APP_USER_TEST_ID)
                     .queryParam("login", AppUserTestEntityProvider.APP_USER_TEST_LOGIN)
                     .queryParam("userType", AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE)
-                    .queryParam("startDate", TestRegistrationDateProvider.TEST_START_DATE_FILTER)
-                    .queryParam("endDate", TestRegistrationDateProvider.TEST_END_DATE_FILTER);
+                    .queryParam("startDate", TestRegistrationDateFiltersProvider.TEST_START_DATE_FILTER)
+                    .queryParam("endDate", TestRegistrationDateFiltersProvider.TEST_END_DATE_FILTER);
 
             AppUser testUser = AppUserTestEntityProvider
                     .getAppUserTestEntity(AppUserTestEntityProvider.APP_USER_TEST_RAW_PASSWORD);
@@ -142,8 +138,8 @@ public class AppUserControllerTest {
                     .queryParam("id", 0L)
                     .queryParam("login", AppUserTestEntityProvider.APP_USER_TEST_LOGIN)
                     .queryParam("userType", AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE)
-                    .queryParam("startDate", TestRegistrationDateProvider.TEST_START_DATE_FILTER)
-                    .queryParam("endDate", TestRegistrationDateProvider.TEST_END_DATE_FILTER);
+                    .queryParam("startDate", TestRegistrationDateFiltersProvider.TEST_START_DATE_FILTER)
+                    .queryParam("endDate", TestRegistrationDateFiltersProvider.TEST_END_DATE_FILTER);
 
             AppUser testUser = AppUserTestEntityProvider
                     .getAppUserTestEntity(AppUserTestEntityProvider.APP_USER_TEST_RAW_PASSWORD);
@@ -178,8 +174,8 @@ public class AppUserControllerTest {
                     .queryParam("id", AppUserTestEntityProvider.APP_USER_TEST_ID)
                     .queryParam("login", AppUserTestEntityProvider.APP_USER_TEST_LOGIN)
                     .queryParam("userType", AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE)
-                    .queryParam("startDate", TestRegistrationDateProvider.TEST_END_DATE_FILTER)
-                    .queryParam("endDate", TestRegistrationDateProvider.TEST_START_DATE_FILTER);
+                    .queryParam("startDate", TestRegistrationDateFiltersProvider.TEST_END_DATE_FILTER)
+                    .queryParam("endDate", TestRegistrationDateFiltersProvider.TEST_START_DATE_FILTER);
 
             AppUser testUser = AppUserTestEntityProvider
                     .getAppUserTestEntity(AppUserTestEntityProvider.APP_USER_TEST_RAW_PASSWORD);
@@ -217,8 +213,8 @@ public class AppUserControllerTest {
                     .queryParam("id", AppUserTestEntityProvider.APP_USER_TEST_ID)
                     .queryParam("login", AppUserTestEntityProvider.APP_USER_TEST_LOGIN)
                     .queryParam("userType", AppUserTestEntityProvider.APP_USER_TEST_USER_TYPE)
-                    .queryParam("startDate", TestRegistrationDateProvider.TEST_START_DATE_FILTER)
-                    .queryParam("endDate", TestRegistrationDateProvider.TEST_END_DATE_FILTER);
+                    .queryParam("startDate", TestRegistrationDateFiltersProvider.TEST_START_DATE_FILTER)
+                    .queryParam("endDate", TestRegistrationDateFiltersProvider.TEST_END_DATE_FILTER);
 
             AppUser testUser = AppUserTestEntityProvider
                     .getAppUserTestEntity(AppUserTestEntityProvider.APP_USER_TEST_RAW_PASSWORD);

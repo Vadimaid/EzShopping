@@ -1,15 +1,27 @@
 package kg.ezshopping.ezshopping.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import kg.ezshopping.ezshopping.types.UserType;
 
 import java.time.LocalDateTime;
 
+@Schema(description = "DTO для передачи данных о пользователе клиентскому приложению в теле ответа")
 public class AppUserResponseDto {
+    @Schema(description = "ID пользователя", example = "1", required = true, minimum = "1")
     private Long id;
+    @Schema(description = "Логин пользователя", example = "example_login", required = true)
     private String login;
+    @Schema(description = "Имя пользователя", example = "Иван", required = true)
     private String firstName;
+    @Schema(description = "Фамилия пользователя", example = "Петров", required = true)
     private String lastName;
+    @Schema(description = "Тип пользователя", example = "CLIENT", required = true)
     private UserType userType;
+    @Schema(
+            description = "Дата и время регистрации пользователя в формате ISO",
+            example = "2020-04-20T12:00:00Z",
+            required = true
+    )
     private LocalDateTime createdAt;
 
     public AppUserResponseDto() {

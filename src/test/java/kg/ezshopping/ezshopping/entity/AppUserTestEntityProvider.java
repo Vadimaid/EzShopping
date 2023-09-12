@@ -1,6 +1,6 @@
 package kg.ezshopping.ezshopping.entity;
 
-import kg.ezshopping.ezshopping.date.TestRegistrationDateProvider;
+import kg.ezshopping.ezshopping.date.TestRegistrationDateFiltersProvider;
 import kg.ezshopping.ezshopping.types.UserType;
 
 import java.util.List;
@@ -22,7 +22,7 @@ public class AppUserTestEntityProvider {
         appUserTestEntity.setPassword(testUserPassword);
         appUserTestEntity.setFirstName(APP_USER_TEST_FIRSTNAME);
         appUserTestEntity.setLastName(APP_USER_TEST_LASTNAME);
-        appUserTestEntity.setCreatedAt(TestRegistrationDateProvider.TEST_REGISTRATION_DATE);
+        appUserTestEntity.setCreatedAt(TestRegistrationDateFiltersProvider.TEST_REGISTRATION_DATE);
         appUserTestEntity.setUserType(APP_USER_TEST_USER_TYPE);
         appUserTestEntity.setActive(Boolean.TRUE);
         return appUserTestEntity;
