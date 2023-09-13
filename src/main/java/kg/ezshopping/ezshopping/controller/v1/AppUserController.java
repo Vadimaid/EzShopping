@@ -97,6 +97,29 @@ public class AppUserController {
         return ResponseEntity.ok(this.appUserService.getAllAppUsers(id, login, userType, startDate, endDate));
     }
 
+
+    @Operation(
+            summary = "Изменение данных полльзователя",
+            description = "Изменение информации авторезированного пользователя по параметрам. \n" +
+                    "Для изменения каких либо данных обязательно нужно подтвердить пароль",
+            security = @SecurityRequirement(name = "Bearer Authentication"),
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200 OK",
+                            description = "Обновленная информация пользователя",
+                            content = @Content(schema = @Schema(implementation = AppUserResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400 BAD_REQUEST ",
+                            description = "Сообщение об ошибке",
+                            content = @Content(schema = @Schema(implementation = String.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "401 UNAUTHORIZED ",
+                            description = "Попытка доступа к ресурсу неавторизованным пользователем"
+                    )
+            }
+    )
     @PutMapping("/update")
     public ResponseEntity<AppUserResponseDto> putUserInfo(
             @RequestParam(required = true) String oldPassword,
