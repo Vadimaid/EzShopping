@@ -42,7 +42,7 @@ class StoreServiceTest {
 
     @Test
     public void findStoreById_OK(){
-        Store store = StoreTestEntity.getTestStoreEntity();
+        Store store = StoreTestEntity.getTestEntityStore();
         when(this.storeRepository.getStoreById(
                         Mockito.eq(store.getId())
                 ))
@@ -60,7 +60,7 @@ class StoreServiceTest {
 
     @Test
     public void findStoreById_StoreNotFound(){
-        Store store = StoreTestEntity.getTestStoreEntity();
+        Store store = StoreTestEntity.getTestEntityStore();
         when(this.storeRepository.getStoreById(
                         Mockito.eq(store.getId())
                 ))
@@ -90,7 +90,7 @@ class StoreServiceTest {
 
     @Test
     public void searchShops_OK(){
-        Store store = StoreTestEntity.getTestStoreEntity();
+        Store store = StoreTestEntity.getTestEntityStore();
 
                 Mockito
                         .when(this.storeRepository.findAll(Mockito.any(Predicate.class)))
@@ -110,7 +110,7 @@ class StoreServiceTest {
 
     @Test
     public void searchShops_StoreNotFound(){
-        Store store = StoreTestEntity.getTestStoreEntity();
+        Store store = StoreTestEntity.getTestEntityStore();
 
         Exception exception = Assertions.assertThrows(
                 StoreNotFoundException.class,

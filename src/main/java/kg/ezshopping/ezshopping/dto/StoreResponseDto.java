@@ -7,6 +7,7 @@ public class StoreResponseDto {
     private String fullName;
     private String phoneNumber;
     private String email;
+    private String login;
     private String address;
     private String link;
     private LocalDateTime createdAt;
@@ -48,6 +49,15 @@ public class StoreResponseDto {
 
     public StoreResponseDto setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+        return this;
+    }
+
+    public String getLogin() {
+        return login;
+    }
+
+    public StoreResponseDto setLogin(String login) {
+        this.login = login;
         return this;
     }
 

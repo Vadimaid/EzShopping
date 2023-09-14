@@ -14,7 +14,6 @@ public interface StoreService {
     Store findStoreById(Long storeId) throws StoreNotFoundException;
     StoreResponseDto updateStoreInfo(StoreRequestDto storeRequestDto, Long storeId) throws StoreNotFoundException, InvalidDataException, StoreAlreadyExistsException;
     StoreResponseDto deleteStoreById(Long storeId) throws StoreNotFoundException;
-    List<StoreResponseDto> getAllStores() throws StoreNotFoundException;
     List<StoreResponseDto> getAllStoresRegisteredAfterSomeDate(LocalDateTime registeredAfter) throws StoreNotFoundException;
     Long numberOfAllStores();
     List<StoreResponseDto> searchShops(String name) throws InvalidDataException, StoreNotFoundException;

@@ -85,25 +85,6 @@ public class StoreServiceImpl implements StoreService {
     }
 
     @Override
-    public List<StoreResponseDto> getAllStores() throws StoreNotFoundException {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-
-        Iterable<Store> storeIterable =
-                this.storeRepository.findAll(booleanBuilder.getValue());
-
-        List<StoreResponseDto> storeResponseDtoList =
-                StreamSupport
-                        .stream(storeIterable.spliterator(),false)
-                        .map(StoreMapper::mapEntityToStoreResponseDto)
-                        .collect(Collectors.toList());
-
-        if (storeResponseDtoList.isEmpty()){
-            throw new StoreNotFoundException("Store not found");
-        }
-        return storeResponseDtoList;
-    }
-
-    @Override
     public List<StoreResponseDto> getAllStoresRegisteredAfterSomeDate(LocalDateTime registeredAfter) throws StoreNotFoundException {
         BooleanBuilder booleanBuilder = new BooleanBuilder(
                 this.predicateForSearchStoreByDate(registeredAfter)

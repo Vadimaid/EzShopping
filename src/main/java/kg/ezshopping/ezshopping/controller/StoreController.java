@@ -45,11 +45,6 @@ public class StoreController {
         return this.storeService.deleteStoreById(storeId);
     }
 
-    @GetMapping("/get_all_stores")
-    public List<StoreResponseDto> getAllStores() throws StoreNotFoundException {
-        return this.storeService.getAllStores();
-    }
-
     @GetMapping("/get_all_after_date")
     public List<StoreResponseDto> getAllStoresRegisteredAfterSomeDate(
             @RequestParam(required = false) LocalDateTime registeredAfter) throws StoreNotFoundException {
