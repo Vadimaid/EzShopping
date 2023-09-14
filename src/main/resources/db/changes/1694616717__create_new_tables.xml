@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="akmaral" id="init_scripts">
+        <sql>
+            create table if not exists store (
+                id bigserial primary key,
+                created_at timestamp without time zone not null default now(),
+                login  varchar(255) not null unique,
+                password varchar(255) not null unique,
+                full_name varchar(255) not null unique,
+                phone_number varchar(20) not null,
+                email varchar(255) not null,
+                address varchar(255) not null,
+                link varchar(255) not null,
+                is_active boolean not null default true
+                );
+        </sql>
+    </changeSet>
+</databaseChangeLog>
