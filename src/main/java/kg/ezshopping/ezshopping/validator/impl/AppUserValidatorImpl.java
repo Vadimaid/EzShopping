@@ -29,30 +29,6 @@ public class AppUserValidatorImpl implements AppUserValidator {
     }
 
     @Override
-    public void validateAppUserRequestDto(AppUserRequestDto appUserRequestDto)
-            throws InvalidUserCredentialsException,
-            LoginAlreadyExistsException,
-            InvalidUserInfoException,
-            InvalidUserTypeException
-    {
-        if(Objects.isNull(appUserRequestDto)) {
-            throw new IllegalArgumentException("Данные пользователя не могут быть null!");
-        }
-
-        this.checkIfLoginIsNullOrEmpty(appUserRequestDto.getLogin());
-        this.checkIfLoginAlreadyExists(appUserRequestDto.getLogin());
-
-        this.checkIfPasswordIsNullOrEmpty(appUserRequestDto.getPassword());
-
-        this.checkIfFirstnameIsNullOrEmpty(appUserRequestDto.getFirstName());
-
-        this.checkIfLastnameIsNullOrEmpty(appUserRequestDto.getLastName());
-
-        this.userTypeValidator.checkIfUserTypeIsNull(appUserRequestDto.getUserType());
-        this.userTypeValidator.checkIfUserTypeExists(appUserRequestDto.getUserType());
-    }
-
-    @Override
     public void checkIfLoginIsNullOrEmpty(String login) throws InvalidUserCredentialsException {
         if(Objects.isNull(login) || login.isEmpty()) {
             throw new InvalidUserCredentialsException("Логин пользователя не может быть пустым!");

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="vadimaid" id="init_scripts">
+        <sql>
+            alter table if exists app_user
+                add column if not exists user_full_name varchar not null default '',
+                add column if not exists date_of_birth date,
+                add column if not exists address varchar,
+                add column if not exists phone varchar,
+                add column if not exists email varchar,
+                add column if not exists instagram_account varchar,
+                add column if not exists profile_image bytea;
+
+            update app_user set user_full_name = (user_last_name || ' ' || user_first_name) where user_last_name is not null;
+
+            alter table if exists app_user
+                drop column if exists user_last_name,
+                drop column if exists user_first_name;
+        </sql>
+    </changeSet>
+</databaseChangeLog>

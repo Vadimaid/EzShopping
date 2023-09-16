@@ -1,38 +1,18 @@
 package kg.ezshopping.ezshopping.mapper;
 
-import kg.ezshopping.ezshopping.dto.AppUserRequestDto;
 import kg.ezshopping.ezshopping.dto.AppUserResponseDto;
-import kg.ezshopping.ezshopping.dto.UserTypeResponseDto;
 import kg.ezshopping.ezshopping.entity.AppUser;
-import kg.ezshopping.ezshopping.types.UserType;
-
-import java.util.List;
-import java.util.stream.Collectors;
+import org.springframework.util.Base64Utils;
 
 public class AppUserMapper {
-    public static AppUser mapToAppUserEntity(AppUserRequestDto appUserRequestDto) {
-        return new AppUser()
-                .setLogin(appUserRequestDto.getLogin())
-                .setPassword(appUserRequestDto.getPassword())
-                .setFirstName(appUserRequestDto.getFirstName())
-                .setLastName(appUserRequestDto.getLastName())
-                .setUserType(appUserRequestDto.getUserType());
-    }
 
     public static AppUserResponseDto mapEntityToAppUserResponseDto(AppUser source) {
         return new AppUserResponseDto()
                 .setId(source.getId())
                 .setLogin(source.getLogin())
-                .setFirstName(source.getFirstName())
-                .setLastName(source.getLastName())
+                .setFullName(source.getUserFullName())
                 .setUserType(source.getUserType())
-                .setCreatedAt(source.getCreatedAt());
-    }
-
-    public static List<AppUserResponseDto> mapEntityListToAppUserResponseDtoList(List<AppUser> sourceList) {
-        return sourceList
-                .stream()
-                .map(AppUserMapper::mapEntityToAppUserResponseDto)
-                .collect(Collectors.toList());
+                .setCreatedAt(source.getCreatedAt())
+                .setProfileImage(Base64Utils.encodeToString(source.getProfileImage()));
     }
 }

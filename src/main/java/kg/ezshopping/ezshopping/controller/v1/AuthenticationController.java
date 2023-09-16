@@ -1,7 +1,6 @@
 package kg.ezshopping.ezshopping.controller.v1;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -10,10 +9,11 @@ import kg.ezshopping.ezshopping.dto.*;
 import kg.ezshopping.ezshopping.exception.*;
 import kg.ezshopping.ezshopping.service.AppUserService;
 import kg.ezshopping.ezshopping.service.AuthenticationService;
-import kg.ezshopping.ezshopping.service.UserTypeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/v1/auth")
@@ -24,23 +24,20 @@ import org.springframework.web.bind.annotation.*;
 public class AuthenticationController {
     private final AuthenticationService authenticationService;
     private final AppUserService appUserService;
-    private final UserTypeService userTypeService;
 
     @Autowired
     public AuthenticationController(
             AuthenticationService authenticationService,
-            AppUserService appUserService,
-            UserTypeService userTypeService
+            AppUserService appUserService
     ) {
         this.authenticationService = authenticationService;
         this.appUserService = appUserService;
-        this.userTypeService = userTypeService;
     }
 
     @Operation(
-            summary = "Регистрация нового пользователя.",
+            summary = "Регистрация нового магазина.",
             description = "Регистрирует пользователя в системе. " +
-                    "В теле запроса принимает данные пользователя в виде AppUserRequestDto. ",
+                    "В теле запроса принимает данные пользователя в виде ShopUserRegisterDto. ",
             responses = {
                     @ApiResponse(
                             responseCode = "200 OK",
@@ -54,16 +51,35 @@ public class AuthenticationController {
                     )
             }
     )
-    @PostMapping(value = "/register")
-    public ResponseEntity<AppUserResponseDto> registerNewAppUser(
-            @RequestBody AppUserRequestDto appUserRequestDto
+    @PostMapping(value = "/register/shop")
+    public ResponseEntity<AppUserResponseDto> registerNewShop(
+            @RequestBody @Valid ShopUserRegisterDto appUserRequestDto
+    ) throws LoginAlreadyExistsException, InvalidUserCredentialsException {
+        return ResponseEntity.ok(this.appUserService.registerNewShop(appUserRequestDto));
+    }
+
+    @Operation(
+            summary = "Регистрация нового клиента.",
+            description = "Регистрирует пользователя в системе. " +
+                    "В теле запроса принимает данные пользователя в виде ClientUserRegisterDto. ",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200 OK",
+                            description = "Информация о зарегестриванном пользователе",
+                            content = @Content(schema = @Schema(implementation = AppUserResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400 BAD_REQUEST",
+                            description = "Сообщение об ошибке",
+                            content = @Content(schema = @Schema(implementation = String.class))
+                    )
+            }
     )
-            throws InvalidUserInfoException,
-            InvalidUserTypeException,
-            LoginAlreadyExistsException,
-            InvalidUserCredentialsException
-    {
-        return ResponseEntity.ok(this.appUserService.registerNewAppUser(appUserRequestDto));
+    @PostMapping(value = "/register/client")
+    public ResponseEntity<AppUserResponseDto> registerNewClient(
+            @RequestBody @Valid ClientUserRegisterDto appUserRequestDto
+    ) throws LoginAlreadyExistsException, InvalidUserCredentialsException {
+        return ResponseEntity.ok(this.appUserService.registerNewClient(appUserRequestDto));
     }
 
     @Operation(

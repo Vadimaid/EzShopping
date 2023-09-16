@@ -5,8 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
-@Schema(description = "DTO для передачи данных о пользователе на сервер в теле запроса")
-public class AppUserRequestDto {
+public abstract class AppUserRegisterDto {
 
     @Schema(description = "Логин пользователя. Ограничения: Не может быть null или пустым. Должен быть уникальным", example = "example_login", required = true)
     @NotNull
@@ -23,15 +22,19 @@ public class AppUserRequestDto {
     @NotEmpty
     private String fullName;
 
+    @Schema(description = "Номер телефона", required = true)
+    @NotNull
+    @NotEmpty
+    private String phone;
 
-    public AppUserRequestDto() {
-    }
+    @Schema(description = "Изображение профиля пользователя")
+    private String profileImageBase64;
 
     public String getLogin() {
         return login;
     }
 
-    public AppUserRequestDto setLogin(String login) {
+    public AppUserRegisterDto setLogin(String login) {
         this.login = login;
         return this;
     }
@@ -40,8 +43,35 @@ public class AppUserRequestDto {
         return password;
     }
 
-    public AppUserRequestDto setPassword(String password) {
+    public AppUserRegisterDto setPassword(String password) {
         this.password = password;
+        return this;
+    }
+
+    public String getFullName() {
+        return fullName;
+    }
+
+    public AppUserRegisterDto setFullName(String fullName) {
+        this.fullName = fullName;
+        return this;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public AppUserRegisterDto setPhone(String phone) {
+        this.phone = phone;
+        return this;
+    }
+
+    public String getProfileImageBase64() {
+        return profileImageBase64;
+    }
+
+    public AppUserRegisterDto setProfileImageBase64(String profileImageBase64) {
+        this.profileImageBase64 = profileImageBase64;
         return this;
     }
 }
