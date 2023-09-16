@@ -7,22 +7,28 @@ import java.time.LocalDateTime;
 
 @Schema(description = "DTO для передачи данных о пользователе клиентскому приложению в теле ответа")
 public class AppUserResponseDto {
-    @Schema(description = "ID пользователя", example = "1", required = true, minimum = "1")
+
+    @Schema(description = "ID пользователя", example = "1", minimum = "1")
     private Long id;
-    @Schema(description = "Логин пользователя", example = "example_login", required = true)
+
+    @Schema(description = "Логин пользователя", example = "example_login")
     private String login;
-    @Schema(description = "Имя пользователя", example = "Иван", required = true)
-    private String firstName;
-    @Schema(description = "Фамилия пользователя", example = "Петров", required = true)
-    private String lastName;
-    @Schema(description = "Тип пользователя", example = "CLIENT", required = true)
+
+    @Schema(description = "Полное имя пользователя", example = "Иванов Иван")
+    private String fullName;
+
+    @Schema(description = "Тип пользователя", example = "CLIENT")
     private UserType userType;
+
     @Schema(
             description = "Дата и время регистрации пользователя в формате ISO",
             example = "2020-04-20T12:00:00Z",
             required = true
     )
     private LocalDateTime createdAt;
+
+    @Schema(description = "Изображение профиля")
+    private String profileImage;
 
     public AppUserResponseDto() {
     }
@@ -45,21 +51,12 @@ public class AppUserResponseDto {
         return this;
     }
 
-    public String getFirstName() {
-        return firstName;
+    public String getFullName() {
+        return fullName;
     }
 
-    public AppUserResponseDto setFirstName(String firstName) {
-        this.firstName = firstName;
-        return this;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public AppUserResponseDto setLastName(String lastName) {
-        this.lastName = lastName;
+    public AppUserResponseDto setFullName(String fullName) {
+        this.fullName = fullName;
         return this;
     }
 
@@ -78,6 +75,15 @@ public class AppUserResponseDto {
 
     public AppUserResponseDto setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+        return this;
+    }
+
+    public String getProfileImage() {
+        return profileImage;
+    }
+
+    public AppUserResponseDto setProfileImage(String profileImage) {
+        this.profileImage = profileImage;
         return this;
     }
 }

@@ -1,60 +1,45 @@
 package kg.ezshopping.ezshopping.service.impl;
 
-import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Predicate;
-import kg.ezshopping.ezshopping.dto.AppUserRequestDto;
 import kg.ezshopping.ezshopping.dto.AppUserResponseDto;
+import kg.ezshopping.ezshopping.dto.ClientUserRegisterDto;
+import kg.ezshopping.ezshopping.dto.ShopUserRegisterDto;
+import kg.ezshopping.ezshopping.entity.AppRole;
 import kg.ezshopping.ezshopping.entity.AppUser;
-import kg.ezshopping.ezshopping.entity.QAppUser;
-import kg.ezshopping.ezshopping.exception.*;
+import kg.ezshopping.ezshopping.exception.InvalidUserCredentialsException;
+import kg.ezshopping.ezshopping.exception.LoginAlreadyExistsException;
 import kg.ezshopping.ezshopping.mapper.AppUserMapper;
+import kg.ezshopping.ezshopping.repository.AppRoleRepository;
 import kg.ezshopping.ezshopping.repository.AppUserRepository;
 import kg.ezshopping.ezshopping.service.AppUserService;
 import kg.ezshopping.ezshopping.types.UserType;
-import kg.ezshopping.ezshopping.validator.AppUserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.Base64Utils;
 
-import javax.management.relation.InvalidRelationIdException;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.Collections;
+import java.util.Optional;
 
 @Service
 public class AppUserServiceImpl implements AppUserService {
-    private final AppUserValidator appUserValidator;
+
+    private final String ROLE_SHOP = "SHOP";
+    private final String ROLE_CLIENT = "CLIENT";
+
     private final AppUserRepository appUserRepository;
     private final PasswordEncoder passwordEncoder;
+    private final AppRoleRepository appRoleRepository;
 
     @Autowired
     public AppUserServiceImpl(
-            AppUserValidator appUserValidator,
             AppUserRepository appUserRepository,
-            PasswordEncoder passwordEncoder
-    ) {
-        this.appUserValidator = appUserValidator;
+            PasswordEncoder passwordEncoder,
+            AppRoleRepository appRoleRepository) {
         this.appUserRepository = appUserRepository;
         this.passwordEncoder = passwordEncoder;
-    }
-
-    @Override
-    public AppUserResponseDto registerNewAppUser(AppUserRequestDto requestDto)
-            throws InvalidUserInfoException,
-            InvalidUserTypeException,
-            LoginAlreadyExistsException,
-            InvalidUserCredentialsException
-    {
-        this.appUserValidator.validateAppUserRequestDto(requestDto);
-        AppUser appUser = AppUserMapper.mapToAppUserEntity(requestDto);
-
-        appUser.setPassword(this.passwordEncoder.encode(appUser.getPassword()));
-
-        appUser = this.appUserRepository.save(appUser);
-        return AppUserMapper.mapEntityToAppUserResponseDto(appUser);
+        this.appRoleRepository = appRoleRepository;
     }
 
     @Override
@@ -63,60 +48,83 @@ public class AppUserServiceImpl implements AppUserService {
         return AppUserMapper.mapEntityToAppUserResponseDto(authorizedAppUser);
     }
 
+    @Transactional
     @Override
-    public List<AppUserResponseDto> getAllAppUsers(
-            Long appUserId,
-            String login,
-            UserType userType,
-            LocalDateTime startDate,
-            LocalDateTime endDate
-    )
-            throws InvalidIdException, IncorrectDateFiltersException, AppUsersNotFoundException {
-        BooleanBuilder booleanBuilder = new BooleanBuilder();
-        QAppUser root = QAppUser.appUser;
-
-        if(Objects.nonNull(appUserId)) {
-            if(appUserId < 1L) {
-                throw new InvalidIdException("ID пользователя не может быть меньше 1!");
-            }
-            booleanBuilder.and(root.id.eq(appUserId));
-        }
-        if(Objects.nonNull(login) && !login.isEmpty()) {
-            booleanBuilder.and(root.login.eq(login));
-        }
-        if(Objects.nonNull(userType)) {
-            booleanBuilder.and(root.userType.eq(userType));
+    public AppUserResponseDto registerNewClient(ClientUserRegisterDto requestDto) throws LoginAlreadyExistsException, InvalidUserCredentialsException {
+        if (requestDto.getLogin().length() < 5) {
+            throw new InvalidUserCredentialsException("Логин не должен быть короче 5 символов");
         }
 
-        boolean startDateIsNonNull = Objects.nonNull(startDate);
-        if(startDateIsNonNull) {
-            booleanBuilder.and(root.createdAt.goe(startDate));
-        }
-        if(Objects.nonNull(endDate)) {
-            if(startDateIsNonNull && startDate.isAfter(endDate)) {
-                throw new IncorrectDateFiltersException(
-                        "Неверно заданы фильтры поиска по дате! Начальная дата не может быть позже конечной!"
-                );
-            }
-            booleanBuilder.and(root.createdAt.loe(endDate));
+        if (requestDto.getPassword().length() < 8) {
+            throw new InvalidUserCredentialsException("Пароль не должен содержать менее 8 символов");
         }
 
-        Iterable<AppUser> foundAppUsersIterable;
-        Predicate searchPredicate = booleanBuilder.getValue();
-        if(Objects.nonNull(searchPredicate)) {
-            foundAppUsersIterable = this.appUserRepository.findAll(booleanBuilder.getValue());
-        } else {
-            foundAppUsersIterable = this.appUserRepository.findAll();
+        Optional<AppUser> possibleDuplicate = this.appUserRepository.getAppUserByLogin(requestDto.getLogin());
+        if (possibleDuplicate.isPresent()) {
+            throw new LoginAlreadyExistsException("Этот логин уже занят.");
         }
 
-        List<AppUserResponseDto> appUserResponseDtoList =
-                StreamSupport
-                        .stream(foundAppUsersIterable.spliterator(), false)
-                        .map(AppUserMapper::mapEntityToAppUserResponseDto).toList();
+        AppRole role = this.appRoleRepository.findByName(this.ROLE_CLIENT);
+        AppUser client = new AppUser();
+        client
+                .setLogin(requestDto.getLogin())
+                .setPassword(this.passwordEncoder.encode(requestDto.getPassword()))
+                .setUserType(UserType.CLIENT)
+                .setUserFullName(requestDto.getFullName())
+                .setDateOfBirth(requestDto.getDateOfBirth())
+                .setEmail(requestDto.getEmail())
+                .setUserRolesList(Collections.singletonList(role))
+                .setProfileImage(Base64Utils.decodeFromString(requestDto.getProfileImageBase64()));
 
-        if(appUserResponseDtoList.isEmpty()) {
-            throw new AppUsersNotFoundException("По заданным параметрам не найдено ни одного пользователя!");
+        this.appUserRepository.save(client);
+        AppUserResponseDto response = new AppUserResponseDto();
+        response
+                .setId(client.getId())
+                .setCreatedAt(client.getCreatedAt())
+                .setLogin(client.getLogin())
+                .setFullName(client.getUserFullName())
+                .setUserType(client.getUserType())
+                .setProfileImage(Base64Utils.encodeToString(client.getProfileImage()));
+        return response;
+    }
+
+    @Transactional
+    @Override
+    public AppUserResponseDto registerNewShop(ShopUserRegisterDto requestDto) throws LoginAlreadyExistsException, InvalidUserCredentialsException {
+        if (requestDto.getLogin().length() < 5) {
+            throw new InvalidUserCredentialsException("Логин не должен быть короче 5 символов");
         }
-        return appUserResponseDtoList;
+
+        if (requestDto.getPassword().length() < 8) {
+            throw new InvalidUserCredentialsException("Пароль не должен содержать менее 8 символов");
+        }
+
+        Optional<AppUser> possibleDuplicate = this.appUserRepository.getAppUserByLogin(requestDto.getLogin());
+        if (possibleDuplicate.isPresent()) {
+            throw new LoginAlreadyExistsException("Этот логин уже занят.");
+        }
+
+        AppRole role = this.appRoleRepository.findByName(this.ROLE_SHOP);
+        AppUser shop = new AppUser();
+        shop
+                .setLogin(requestDto.getLogin())
+                .setPassword(this.passwordEncoder.encode(requestDto.getPassword()))
+                .setUserType(UserType.SHOP)
+                .setUserFullName(requestDto.getFullName())
+                .setAddress(requestDto.getAddress())
+                .setInstagramAccount(requestDto.getInstagramAccount())
+                .setPhone(requestDto.getPhone())
+                .setProfileImage(Base64Utils.decodeFromString(requestDto.getProfileImageBase64()));
+
+        this.appUserRepository.save(shop);
+        AppUserResponseDto response = new AppUserResponseDto();
+        response
+                .setId(shop.getId())
+                .setCreatedAt(shop.getCreatedAt())
+                .setLogin(shop.getLogin())
+                .setFullName(shop.getUserFullName())
+                .setUserType(shop.getUserType())
+                .setProfileImage(Base64Utils.encodeToString(shop.getProfileImage()));
+        return response;
     }
 }

@@ -59,43 +59,4 @@ public class AppUserController {
         return ResponseEntity.ok(this.appUserService.getCurrentAuthorizedUser());
     }
 
-    @Operation(
-            summary = "Просмотр информации о всех пользователях системы",
-            description = "Выводит информацию о всех пользователях системы по параметрам. ",
-            security = @SecurityRequirement(name = "Bearer Authentication"),
-            responses = {
-                    @ApiResponse(
-                            responseCode = "200 OK",
-                            description = "Список найденных по параметрам запроса пользователей",
-                            content = @Content(
-                                    array = @ArraySchema(schema = @Schema(implementation = AppUserResponseDto.class))
-                            )
-                    ),
-                    @ApiResponse(
-                            responseCode = "400 BAD_REQUEST",
-                            description = "Сообщение об ошибке",
-                            content = @Content(schema = @Schema(implementation = String.class))
-                    ),
-                    @ApiResponse(
-                            responseCode = "401 UNAUTHORIZED",
-                            description = "Попытка доступа к ресурсу неавторизованным пользователем"
-                    )
-            }
-    )
-    @GetMapping
-    public ResponseEntity<List<AppUserResponseDto>> getAllAppUsers(
-            @RequestParam(required = false) Long id,
-            @RequestParam(required = false) String login,
-            @RequestParam(required = false) UserType userType,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            @RequestParam(required = false) LocalDateTime startDate,
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
-            @RequestParam(required = false) LocalDateTime endDate
-    )
-            throws IncorrectDateFiltersException,
-            AppUsersNotFoundException,
-            InvalidIdException
-    {
-        return ResponseEntity.ok(this.appUserService.getAllAppUsers(id, login, userType, startDate, endDate));
-    }
 }
