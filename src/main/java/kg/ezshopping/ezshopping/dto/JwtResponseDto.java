@@ -3,7 +3,7 @@ package kg.ezshopping.ezshopping.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "DTO для передачи JWT клиентскому приложению в теле ответа")
-public class JwtResponseDto {
+public class JwtResponseDto extends AppUserResponseDto {
     @Schema(
             description = "Значение JWT без \'Bearer \'",
             example = "eyJhbGciOiJIUzUxMiJ9." +

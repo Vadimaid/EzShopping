@@ -54,7 +54,8 @@ public class SecurityConfiguration {
                         "/**/user-types/non-system",
                         "/v3/api-docs/**",
                         "/swagger-resources/**",
-                        "/swagger-ui/**"
+                        "/swagger-ui/**",
+                        "/**/reference/**"
                 ).permitAll()
                 .anyRequest().authenticated()
                 .and()

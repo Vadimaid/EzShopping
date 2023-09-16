@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="vadimaid" id="add_items">
+        <sql>
+            create table if not exists item_category (
+                                                         id bigserial primary key,
+                                                         category_name varchar not null,
+                                                         parent_id bigint references item_category (id) on update cascade on delete no action,
+                is_active boolean not null default true
+                );
+
+            create table if not exists item_colour (
+                                                       id bigserial primary key,
+                                                       colour_name varchar not null
+            );
+
+            create table if not exists item_size (
+                                                     id bigserial primary key,
+                                                     size_name varchar not null
+            );
+
+            create table if not exists item (
+                                                id bigserial primary key,
+                                                shop_id bigint references app_user (id) on update cascade on delete no action not null,
+                category_id bigint references item_category (id) on update cascade on delete no action not null,
+                item_comment varchar not null,
+                is_available boolean not null default true
+                );
+
+            create table if not exists item_colour_available (
+                item_id bigint references item (id) on update cascade on delete no action not null,
+                colour_id bigint references item_colour (id) on update cascade on delete no action not null
+                );
+
+            create table if not exists item_size_available (
+                item_id bigint references item (id) on update cascade on delete no action not null,
+                size_id bigint references item_size (id) on update cascade on delete no action not null
+                );
+
+            create table if not exists item_image (
+                                                      id bigserial primary key,
+                                                      item_id bigint references item (id) on update cascade on delete no action not null,
+                is_main boolean,
+                image bytea not null
+                );
+        </sql>
+    </changeSet>
+</databaseChangeLog>

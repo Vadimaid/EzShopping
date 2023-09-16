@@ -1,6 +1,5 @@
 package kg.ezshopping.ezshopping.validator.impl;
 
-import kg.ezshopping.ezshopping.dto.AppUserRequestDto;
 import kg.ezshopping.ezshopping.entity.AppUser;
 import kg.ezshopping.ezshopping.exception.InvalidUserCredentialsException;
 import kg.ezshopping.ezshopping.exception.InvalidUserInfoException;
