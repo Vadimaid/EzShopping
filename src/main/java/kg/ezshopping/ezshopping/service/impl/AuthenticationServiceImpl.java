@@ -1,7 +1,9 @@
 package kg.ezshopping.ezshopping.service.impl;
 
+import kg.ezshopping.ezshopping.dto.AppUserResponseDto;
 import kg.ezshopping.ezshopping.dto.JwtResponseDto;
 import kg.ezshopping.ezshopping.dto.UserCredentialsRequestDto;
+import kg.ezshopping.ezshopping.entity.AppUser;
 import kg.ezshopping.ezshopping.exception.InvalidUserCredentialsException;
 import kg.ezshopping.ezshopping.exception.WrongPasswordException;
 import kg.ezshopping.ezshopping.security.JwtTokenHandler;
@@ -14,6 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 
 import java.util.Objects;
 
@@ -61,7 +64,17 @@ public class AuthenticationServiceImpl implements AuthenticationService {
                             null,
                             authenticatedUser.getAuthorities()
                     );
-            return new JwtResponseDto().setJwtValue(this.jwtTokenHandler.generateJwt(authentication));
+            AppUser client = (AppUser) authenticatedUser;
+            JwtResponseDto response = new JwtResponseDto();
+            response
+                    .setJwtValue(this.jwtTokenHandler.generateJwt(authentication))
+                    .setId(client.getId())
+                    .setCreatedAt(client.getCreatedAt())
+                    .setLogin(client.getLogin())
+                    .setFullName(client.getUserFullName())
+                    .setUserType(client.getUserType())
+                    .setProfileImage(Base64Utils.encodeToString(client.getProfileImage()));
+            return response;
         }
         throw new WrongPasswordException("Введен неверный пароль!");
     }
