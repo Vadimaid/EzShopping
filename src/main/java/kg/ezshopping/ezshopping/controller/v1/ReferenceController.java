@@ -7,9 +7,11 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import kg.ezshopping.ezshopping.dto.ItemCategoryResponseDto;
 import kg.ezshopping.ezshopping.dto.ItemColourResponseDto;
+import kg.ezshopping.ezshopping.dto.ItemGenderResponseDto;
 import kg.ezshopping.ezshopping.dto.ItemSizeResponseDto;
 import kg.ezshopping.ezshopping.service.CategoryService;
 import kg.ezshopping.ezshopping.service.ColourService;
+import kg.ezshopping.ezshopping.service.GenderService;
 import kg.ezshopping.ezshopping.service.SizeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -31,15 +33,19 @@ public class ReferenceController {
     private final CategoryService categoryService;
     private final SizeService sizeService;
     private final ColourService colourService;
+    private final GenderService genderService;
 
     @Autowired
     public ReferenceController(
             CategoryService categoryService,
             SizeService sizeService,
-            ColourService colourService) {
+            ColourService colourService,
+            GenderService genderService
+    ) {
         this.categoryService = categoryService;
         this.sizeService = sizeService;
         this.colourService = colourService;
+        this.genderService = genderService;
     }
 
     @Operation(
@@ -103,5 +109,25 @@ public class ReferenceController {
     @GetMapping(value = "/colours")
     public ResponseEntity<List<ItemColourResponseDto>> getAvailableColours() {
         return ResponseEntity.ok(this.colourService.findAllItemColours());
+    }
+
+    @Operation(
+            summary = "Получение списка полов",
+            responses = {
+                    @ApiResponse(
+                            responseCode = "200 OK",
+                            description = "Список полов",
+                            content = @Content(schema = @Schema(implementation = ItemColourResponseDto.class))
+                    ),
+                    @ApiResponse(
+                            responseCode = "400 BAD_REQUEST",
+                            description = "Сообщение об ошибке",
+                            content = @Content(schema = @Schema(implementation = String.class))
+                    )
+            }
+    )
+    @GetMapping(value = "/genders")
+    public ResponseEntity<List<ItemGenderResponseDto>> getAvailableGenders() {
+        return ResponseEntity.ok(this.genderService.findAllItemGenders());
     }
 }

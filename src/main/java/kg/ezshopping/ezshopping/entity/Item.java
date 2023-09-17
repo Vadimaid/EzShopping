@@ -1,5 +1,6 @@
 package kg.ezshopping.ezshopping.entity;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
@@ -28,7 +29,14 @@ public class Item extends BaseEntity {
     @Column(name = "is_available")
     private Boolean isAvailable;
 
-    @ManyToMany
+    @Column(name = "price")
+    private Integer price;
+
+    @ManyToOne
+    @JoinColumn(name = "gender_id", referencedColumnName = "id")
+    private ItemGender gender;
+
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "item_colour_available",
             joinColumns = @JoinColumn(name = "item_id"),
@@ -36,7 +44,7 @@ public class Item extends BaseEntity {
     )
     private List<ItemColour> availableColours;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.MERGE, CascadeType.DETACH, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "item_size_available",
             joinColumns = @JoinColumn(name = "item_id"),
@@ -46,6 +54,9 @@ public class Item extends BaseEntity {
 
     @OneToMany(mappedBy = "item")
     private List<ItemImage> imageList;
+
+    @OneToMany(mappedBy = "item")
+    private List<ItemComment> itemComments;
 
     public Item() {
     }
@@ -110,6 +121,33 @@ public class Item extends BaseEntity {
 
     public Item setImageList(List<ItemImage> imageList) {
         this.imageList = imageList;
+        return this;
+    }
+
+    public Integer getPrice() {
+        return price;
+    }
+
+    public Item setPrice(Integer price) {
+        this.price = price;
+        return this;
+    }
+
+    public ItemGender getGender() {
+        return gender;
+    }
+
+    public Item setGender(ItemGender gender) {
+        this.gender = gender;
+        return this;
+    }
+
+    public List<ItemComment> getItemComments() {
+        return itemComments;
+    }
+
+    public Item setItemComments(List<ItemComment> itemComments) {
+        this.itemComments = itemComments;
         return this;
     }
 }

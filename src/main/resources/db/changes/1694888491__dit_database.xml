@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                   http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+    <changeSet author="vadimaid" id="edit_database">
+        <sql>
+            create table if not exists item_comment (
+                                                        id bigserial primary key,
+                                                        created_at timestamp without time zone not null default now(),
+                item_id bigint references item(id) on update cascade on delete no action not null,
+                created_by bigint references app_user (id) on update cascade on delete no action not null,
+                comment_text varchar not null,
+                rating int not null default 0
+                );
+
+            create table if not exists item_gender (
+                                                       id bigserial primary key,
+                                                       gender_name varchar not null
+            );
+
+            alter table if exists item
+                add column if not exists price int not null default 0,
+                add column if not exists gender_id bigint references item_gender (id) on update cascade on delete no action;
+
+            create table if not exists user_items (
+                                                      id bigserial primary key,
+                                                      created_at timestamp without time zone not null default now(),
+                user_id bigint references app_user (id) on update cascade on delete no action not null,
+                item_id bigint references item (id) on update cascade on delete no action not null,
+                status varchar not null
+                );
+
+            create table if not exists user_shopping_history (
+                                                                 id bigserial primary key,
+                                                                 created_at timestamp without time zone not null default now(),
+                user_id bigint references app_user (id) on update cascade on delete no action not null,
+                item_id bigint references item (id) on update cascade on delete no action not null,
+                is_public boolean not null default false,
+                bought_price int not null
+                );
+
+            create table if not exists user_follower (
+                user_id bigint references app_user (id) on update cascade on delete no action not null,
+                follow_id bigint references app_user (id) on update cascade on delete no action not null
+                );
+        </sql>
+    </changeSet>
+</databaseChangeLog>
