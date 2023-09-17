@@ -63,6 +63,20 @@ public class AppUser extends BaseEntity implements UserDetails {
     )
     private List<AppRole> userRolesList;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_follower",
+            joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "follow_id", referencedColumnName = "id")
+    )
+    private List<AppUser> followedUsers;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserItem> items;
+
+    @OneToMany(mappedBy = "user")
+    private List<UserShoppingHistory> shoppingHistories;
+
     @PrePersist
     public void prePersist() {
         this.isActive = Boolean.TRUE;
@@ -218,6 +232,33 @@ public class AppUser extends BaseEntity implements UserDetails {
 
     public AppUser setProfileImage(byte[] profileImage) {
         this.profileImage = profileImage;
+        return this;
+    }
+
+    public List<AppUser> getFollowedUsers() {
+        return followedUsers;
+    }
+
+    public AppUser setFollowedUsers(List<AppUser> followedUsers) {
+        this.followedUsers = followedUsers;
+        return this;
+    }
+
+    public List<UserItem> getItems() {
+        return items;
+    }
+
+    public AppUser setItems(List<UserItem> items) {
+        this.items = items;
+        return this;
+    }
+
+    public List<UserShoppingHistory> getShoppingHistories() {
+        return shoppingHistories;
+    }
+
+    public AppUser setShoppingHistories(List<UserShoppingHistory> shoppingHistories) {
+        this.shoppingHistories = shoppingHistories;
         return this;
     }
 }

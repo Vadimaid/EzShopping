@@ -127,4 +127,9 @@ public class AppUserServiceImpl implements AppUserService {
                 .setProfileImage(Base64Utils.encodeToString(shop.getProfileImage()));
         return response;
     }
+
+    @Override
+    public AppUser getAuthorizedUser() {
+        return (AppUser) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
 }
